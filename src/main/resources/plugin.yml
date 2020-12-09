@@ -1,0 +1,6 @@
+name: SenAPI
+version: @version@
+main: uwu.smsgamer.senapi.SenAPILoader
+softdepend: [ PlaceholderAPI ]
+authors: [ Sms_Gamer_3808 ]
+description: An API for you senpai.
