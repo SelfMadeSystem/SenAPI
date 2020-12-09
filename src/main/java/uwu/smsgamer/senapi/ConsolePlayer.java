@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+/**
+ * An {@link OfflinePlayer} implementation that represents the console.
+ */
 public class ConsolePlayer implements OfflinePlayer {
     private static final String NAME = "CONSOLE";
     private static final UUID UUID = new UUID(0L, 0L);
