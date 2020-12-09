@@ -10,13 +10,10 @@ import java.util.*;
  * A utility class for strings.
  */
 public class StringUtils {
-    private final SenAPI api;
+    private static final List<String> MARKDOWN_CHECKS;
+    private static final HashMap<String, Character> MARKDOWN_REPLACEMENTS = new HashMap<>();
 
-    private final List<String> MARKDOWN_CHECKS;
-    private final HashMap<String, Character> MARKDOWN_REPLACEMENTS = new HashMap<>();
-
-    public StringUtils(SenAPI api) {
-        this.api = api;
+    static  {
         MARKDOWN_REPLACEMENTS.put("**", 'o');
         MARKDOWN_REPLACEMENTS.put("__", 'n');
         MARKDOWN_REPLACEMENTS.put("--", 'm');
@@ -36,7 +33,7 @@ public class StringUtils {
      * @return a "markdown" formatted string.
      */
     // Might be shit idk
-    public String markdownToMinecraft(final String input) {
+    public static String markdownToMinecraft(final String input) {
         return markdownToMinecraft(input, 'r');
     }
 
@@ -54,7 +51,7 @@ public class StringUtils {
      * @param reset The reset character.
      * @return a "markdown" formatted string.
      */
-    public String markdownToMinecraft(final String input, final char reset) {
+    public static String markdownToMinecraft(final String input, final char reset) {
         final String first = "\u00A7";
         final String after = "\u00A7" + reset;
         StringBuilder output = new StringBuilder(input);
@@ -105,8 +102,8 @@ public class StringUtils {
      * @param string The string with the placeholders.
      * @return A string with placeholders replaced.
      */
-    public String replacePlaceholders(final OfflinePlayer player, final String string) {
-        if (api.isPlaceholderAPIEnabled()) {
+    public static String replacePlaceholders(final OfflinePlayer player, final String string) {
+        if (PluginUtils.isPlaceholderAPIEnabled()) {
             if (player instanceof ConsolePlayer)
                 Bukkit.getLogger().warning(
                   "If an error occurs, please do not report Sms_Gamer or a placeholder's author. " +
@@ -121,7 +118,7 @@ public class StringUtils {
      * @param s Said string to replace.
      * @return a colorized string.
      */
-    public String colorize(final String s) {
+    public static String colorize(final String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
 
@@ -133,7 +130,7 @@ public class StringUtils {
      * @param onlyAllowed The allowed colours.
      * @return a colorized string.
      */
-    public String colorizeLimited(final String s, char[] onlyAllowed) {
+    public static String colorizeLimited(final String s, char[] onlyAllowed) {
         return colorizeLimited(s, new String(onlyAllowed), 'r');
     }
 
@@ -145,7 +142,7 @@ public class StringUtils {
      * @param onlyAllowed The allowed colours.
      * @return a colorized string.
      */
-    public String colorizeLimited(final String s, String onlyAllowed) {
+    public static String colorizeLimited(final String s, String onlyAllowed) {
         return colorizeLimited(s, onlyAllowed, 'r');
     }
 
@@ -157,7 +154,7 @@ public class StringUtils {
      * @param onlyAllowed The allowed colours.
      * @return a colorized string.
      */
-    public String colorizeLimited(final String s, char[] onlyAllowed, char reset) {
+    public static String colorizeLimited(final String s, char[] onlyAllowed, char reset) {
         return colorizeLimited(s, new String(onlyAllowed), reset);
     }
 
@@ -169,7 +166,7 @@ public class StringUtils {
      * @param onlyAllowed The allowed colours.
      * @return a colorized string.
      */
-    public String colorizeLimited(final String s, String onlyAllowed, char reset) {
+    public static String colorizeLimited(final String s, String onlyAllowed, char reset) {
         char[] output = s.toCharArray();
         for (int i = 0; i < output.length; i++) {
             if (output[i] == '\u00A7') output[i] = '&';
@@ -203,7 +200,7 @@ public class StringUtils {
      * @param args The args.
      * @return The string with placeholders replaced.
      */
-    public String replaceArgsPlaceholders(final String string, final String[] args) {
+    public static String replaceArgsPlaceholders(final String string, final String[] args) {
         return replaceArgsPlaceholders(string, " ", args);
     }
 
@@ -214,7 +211,7 @@ public class StringUtils {
      * @param args The args.
      * @return The string with placeholders replaced.
      */
-    public String replaceArgsPlaceholders(final String string, final String spacing, final String[] args) {
+    public static String replaceArgsPlaceholders(final String string, final String spacing, final String[] args) {
         StringBuilder sb = new StringBuilder();
         int at = 0;
         while (string.length() > at) {

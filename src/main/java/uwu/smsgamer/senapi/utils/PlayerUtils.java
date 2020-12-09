@@ -9,12 +9,6 @@ import uwu.smsgamer.senapi.*;
  * Utilities regarding players.
  */
 public class PlayerUtils {
-    private final SenAPI api;
-
-    public PlayerUtils(SenAPI api) {
-        this.api = api;
-    }
-
     /**
      * Returns an array of characters representing every colour the player has access to.
      *
@@ -22,7 +16,7 @@ public class PlayerUtils {
      * @param permissible The {@link Permissible} to check the permission of.
      * @return an array of characters representing every colour the player has access to.
      */
-    public char[] getAllowedColors(String permissionBase, Permissible permissible) {
+    public static char[] getAllowedColors(String permissionBase, Permissible permissible) {
         char[] allowedColors = new char[0];
         for (char c : Constants.getCharColors())
             if (permissible.hasPermission(permissionBase + c)) {
@@ -42,7 +36,7 @@ public class PlayerUtils {
      * @return the sender cast to an offline player if it's an offline players.
      * If it isn't, then it returns a {@link ConsolePlayer} instance.
      */
-    public OfflinePlayer getPlayer(CommandSender sender) {
+    public static OfflinePlayer getPlayer(CommandSender sender) {
         if (sender instanceof OfflinePlayer) {
             return (OfflinePlayer) sender;
         } else return ConsolePlayer.getInstance();
