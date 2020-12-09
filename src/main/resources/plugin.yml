@@ -1,5 +1,5 @@
 name: SenAPI
-version: @version@
+version: 0.1.1
 main: uwu.smsgamer.senapi.SenAPILoader
 softdepend: [ PlaceholderAPI ]
 authors: [ Sms_Gamer_3808 ]
