@@ -3,6 +3,7 @@ package uwu.smsgamer.senapi.utils.sql;
 import uwu.smsgamer.senapi.utils.Pair;
 
 import java.sql.*;
+import java.util.*;
 
 public class MySQLDB implements SenDB {
     public String host;
@@ -69,6 +70,37 @@ public class MySQLDB implements SenDB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new MySQLTable(this, name);
+    }
+
+    private static class MySQLTable implements SenDB.Table {
+        private final MySQLDB db;
+        private final String name;
+
+        private MySQLTable(MySQLDB db, String name) {
+            this.db = db;
+            this.name = name;
+        }
+
+
+        @Override
+        public void addToRow(String row, Object value) {
+
+        }
+
+        @Override
+        public List<String> getRows() {
+            return null;
+        }
+
+        @Override
+        public List<Object> getRow(String row) {
+            return null;
+        }
+
+        @Override
+        public Map<String, List<Object>> getMultipleRows(String... rows) {
+            return null;
+        }
     }
 }
