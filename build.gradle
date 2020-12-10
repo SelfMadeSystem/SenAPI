@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 group = 'uwu.smsgamer'
-version = '0.2-alpha'
+version = '0.2'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -38,6 +38,12 @@ dependencies {
     runtime "mysql:mysql-connector-java:8.0.15"
 
     compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
+}
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 processResources {
