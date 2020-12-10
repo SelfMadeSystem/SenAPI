@@ -1,7 +1,7 @@
 # SenAPI
-SenAPI is an API that provides some utilities.
-These utilities are mostly just for strings, but also contains a few 
-utilities for Players as well.
+SenAPI is an API that provides some utilities.<br>
+The utilities currently contain String utilities, a few player utilities,
+and some SQL utilities, just MySQL and SQLite for now.<br>
 
 # Implementation:
 ## Gradle:
@@ -34,6 +34,10 @@ dependencies {
 	    <version>version-here</version>
 	</dependency>
 ```
+
+####Thanks:<br>
+- Thank you Vagdedes for helping me make the SQL methods!<br>
+- Thank you koloslolya for the name lol.
 
 <!-- # TODO: Update this. -->
 <br>
