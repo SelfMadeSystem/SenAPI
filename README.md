@@ -35,7 +35,7 @@ dependencies {
 	</dependency>
 ```
 
-####Thanks:<br>
+#### Thanks:<br>
 - Thank you Vagdedes for helping me make the SQL methods!<br>
 - Thank you koloslolya for the name lol.
 
