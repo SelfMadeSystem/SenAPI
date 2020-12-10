@@ -3,8 +3,8 @@ SenAPI is an API that provides some utilities.
 These utilities are mostly just for strings, but also contains a few 
 utilities for Players as well.
 
-## Implementation:
-### Gradle:
+# Implementation:
+## Gradle:
 
 ```groovy
 repositories {
@@ -14,10 +14,10 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.True-cc:SenAPI:master-SNAPSHOT'
+    implementation 'com.github.True-cc:SenAPI:version-here'
 }
 ```
-### Maven:
+## Maven:
 
 ```xml
 	<repositories>
@@ -31,23 +31,10 @@ dependencies {
 	<dependency>
 	    <groupId>com.github.True-cc</groupId>
 	    <artifactId>SenAPI</artifactId>
-	    <version>master-SNAPSHOT</version>
+	    <version>version-here</version>
 	</dependency>
 ```
 
-## Getting API
-##### Getting an instance:
-```Java
-Bukkit.getServicesManager().load(SenAPI.class);
-```
-##### Getting different utilities:
-The StringUtils:
-```java
-senAPI.getStringUtils();
-```
-The PlayerUtils:
-```java
-senAPI.getPlayerUtils();
-```
+<!-- # TODO: Update this. -->
 <br>
-There will be more to this sometime soon.
+There will be more to this sometime soon™.

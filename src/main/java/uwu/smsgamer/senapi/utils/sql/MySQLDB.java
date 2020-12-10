@@ -28,6 +28,7 @@ public class MySQLDB implements SenDB {
 
     @Override
     public void initialize(Pair<String, String>... rows) {
+        connect();
         for (Pair<String, String> row : rows) {
             createTable(row.a, row.b);
         }
@@ -50,25 +51,16 @@ public class MySQLDB implements SenDB {
     }
 
     @Override
-    public boolean isConnected() {
-        try {
-            return con != null && !con.isClosed();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public Table getTable(String table) {
-        return new MySQLTable(this, table);
+    public Table getTable(String name) {
+        if (!tableExists(name)) System.out.println("Table doesn't exist. Might cause errors!");
+        return new MySQLTable(this, name);
     }
 
     @Override
     public Table createTable(String name, String columns) {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
-              "CREATE TABLE IF NOT EXISTS " + tablePrefix + name + " (" + columns + ")");
+              "CREATE TABLE IF NOT EXISTS " + tablePrefix + name + " (" + columns + ");");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,7 +70,7 @@ public class MySQLDB implements SenDB {
 
     @Override
     public boolean tableExists(String name) {
-        try {
+        try { //100% skidded from vagdedes but optimized a bit.
             Connection connection = getConnection();
             if (connection == null) return false;
 
@@ -103,9 +95,14 @@ public class MySQLDB implements SenDB {
         }
 
         @Override
+        public String getName() {
+            return db.tablePrefix + name;
+        }
+
+        @Override
         public void delete() {
             try {
-                db.update("DROP TABLE " + name + ";");
+                db.update("DROP TABLE " + getName() + ";");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -114,7 +111,7 @@ public class MySQLDB implements SenDB {
         @Override
         public void truncate() {
             try {
-                db.update("TRUNCATE TABLE " + name + ";");
+                db.update("TRUNCATE TABLE " + getName() + ";");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -123,7 +120,7 @@ public class MySQLDB implements SenDB {
         @Override
         public int countRows() {
             try {
-                ResultSet rs = db.query("SELECT * FROM " + name);
+                ResultSet rs = db.query("SELECT * FROM " + getName());
                 int i = 0;
                 while (rs.next()) i++;
                 return i;
@@ -134,9 +131,9 @@ public class MySQLDB implements SenDB {
         }
 
         @Override
-        public boolean exists(String column, String values) {
+        public boolean exists(String column, String checkValue) {
             try {
-                ResultSet rs = db.query("SELECT * FROM " + name + " WHERE " + column + "=" + values + ";");
+                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + column + "=" + checkValue + ";");
                 return rs.next();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -147,16 +144,18 @@ public class MySQLDB implements SenDB {
         @Override
         public void addToTable(String columns, String values) {
             try {
-                db.update("INSERT INTO " + name + " (" + columns + ") VALUES (" + values + ");");
+                db.update("INSERT INTO " + getName() + " (" + columns + ") VALUES (" + values + ");");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void removeFromTable(String columns, String operand, String checkData) {
+        public void removeFromTable(String[] where) {
+            if (where.length == 0) return;
+            String condition = Table.getCondition(where);
             try {
-                db.update("DELETE FROM " + name + " WHERE " + columns + operand + checkData + ";");
+                db.update("DELETE FROM " + getName() + " WHERE " + condition + ";");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -169,9 +168,9 @@ public class MySQLDB implements SenDB {
             if (checkData != null) checkData = "'" + checkData + "'";
 
             try {
-                ResultSet rs = db.query("SELECT * FROM " + name + " WHERE " + column + "=" + checkData + ";");
+                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + column + "=" + checkData + ";");
                 if (rs.next()) {
-                    db.update("UPDATE " + name + " SET " + selected + "=" + object + " WHERE " + column + "=" + checkData + ";");
+                    db.update("UPDATE " + getName() + " SET " + selected + "=" + object + " WHERE " + column + "=" + checkData + ";");
                 } else {
                     addToTable(column + ", " + selected, "'" + checkData + "', '" + object + "'");
                 }
@@ -186,7 +185,7 @@ public class MySQLDB implements SenDB {
             if (object != null) object = "'" + object + "'";
             String condition = Table.getCondition(where);
             try {
-                db.update("UPDATE " + name + " SET " + selected + "=" + object + " WHERE " + condition + ";");
+                db.update("UPDATE " + getName() + " SET " + selected + "=" + object + " WHERE " + condition + ";");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -197,10 +196,8 @@ public class MySQLDB implements SenDB {
             if (where.length == 0) return null;
             String condition = Table.getCondition(where);
             try {
-                ResultSet rs = db.query("SELECT * FROM " + name + " WHERE " + condition + ";");
-                if (rs.next()) {
-                    return rs.getObject(selected);
-                }
+                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + condition + ";");
+                if (rs.next()) return rs.getObject(selected);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -212,10 +209,44 @@ public class MySQLDB implements SenDB {
             if (where.length == 0) return null;
             String condition = Table.getCondition(where);
             try {
-                ResultSet rs = db.query("SELECT * FROM " + name + " WHERE " + condition + ";");
+                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + condition + ";");
                 List<Object> list = new ArrayList<>();
-                if (rs.next()) list.add(rs.getObject(selected));
+                while (rs.next()) list.add(rs.getObject(selected));
                 return list;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public List<Object> getAll(String selected) {
+            try {
+                ResultSet rs = db.query("SELECT * FROM " + getName() + ";");
+                List<Object> list = new ArrayList<>();
+                while (rs.next()) list.add(rs.getObject(selected));
+                return list;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public Map<String, List<Object>> getAll() {
+            try {
+                ResultSet rs = db.query("SELECT * FROM " + getName() + ";");
+                ResultSetMetaData meta = rs.getMetaData();
+                int cCount = meta.getColumnCount();
+                Map<String, List<Object>> map = new LinkedHashMap<>();
+                while (rs.next()) {
+                    for (int i = 1; i <= cCount; i++) {
+                        String name = meta.getColumnName(i);
+                        if (map.containsKey(name)) map.get(name).add(rs.getObject(i));
+                        else map.put(name, new ArrayList<>(Collections.singleton(rs.getObject(i))));
+                    }
+                }
+                return map;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
