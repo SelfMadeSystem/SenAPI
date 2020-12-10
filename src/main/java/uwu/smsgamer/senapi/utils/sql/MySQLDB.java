@@ -164,7 +164,20 @@ public class MySQLDB implements SenDB {
 
         @Override
         public void upsert(String selected, Object object, String column, String checkData) {
-            // TODO: 2020-12-09
+            if (object != null) object = "'" + object + "'";
+
+            if (checkData != null) checkData = "'" + checkData + "'";
+
+            try {
+                ResultSet rs = db.query("SELECT * FROM " + name + " WHERE " + column + "=" + checkData + ";");
+                if (rs.next()) {
+                    db.update("UPDATE " + name + " SET " + selected + "=" + object + " WHERE " + column + "=" + checkData + ";");
+                } else {
+                    addToTable(column + ", " + selected, "'" + checkData + "', '" + object + "'");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
