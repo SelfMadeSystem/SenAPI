@@ -77,7 +77,7 @@ public class MySQLDB implements SenDB {
             DatabaseMetaData metadata = connection.getMetaData();
             if (metadata == null) return false;
 
-            ResultSet rs = metadata.getTables(null, null, name, null);
+            ResultSet rs = metadata.getTables(null, null, tablePrefix + name, null);
             return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class MySQLDB implements SenDB {
         }
 
         @Override
-        public void addToTable(String columns, String values) {
+        public void add(String columns, String values) {
             try {
                 db.update("INSERT INTO " + getName() + " (" + columns + ") VALUES (" + values + ");");
             } catch (SQLException e) {
@@ -172,7 +172,7 @@ public class MySQLDB implements SenDB {
                 if (rs.next()) {
                     db.update("UPDATE " + getName() + " SET " + selected + "=" + object + " WHERE " + column + "=" + checkData + ";");
                 } else {
-                    addToTable(column + ", " + selected, "'" + checkData + "', '" + object + "'");
+                    add(column + ", " + selected, "'" + checkData + "', '" + object + "'");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

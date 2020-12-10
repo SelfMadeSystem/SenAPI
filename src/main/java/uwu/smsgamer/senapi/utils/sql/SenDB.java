@@ -144,7 +144,7 @@ public interface SenDB {
          * @param columns The columns of the table.
          * @param values The values of the row to add.
          */
-        void addToTable(String columns, String values);
+        void add(String columns, String values);
 
         /**
          * Removes a row from the table.
