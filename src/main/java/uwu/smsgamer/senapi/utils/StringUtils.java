@@ -2,7 +2,7 @@ package uwu.smsgamer.senapi.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
-import uwu.smsgamer.senapi.*;
+import uwu.smsgamer.senapi.ConsolePlayer;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class StringUtils {
     private static final List<String> MARKDOWN_CHECKS;
     private static final HashMap<String, Character> MARKDOWN_REPLACEMENTS = new HashMap<>();
 
-    static  {
+    static {
         MARKDOWN_REPLACEMENTS.put("**", 'o');
         MARKDOWN_REPLACEMENTS.put("__", 'n');
         MARKDOWN_REPLACEMENTS.put("--", 'm');
@@ -107,7 +107,7 @@ public class StringUtils {
             if (player instanceof ConsolePlayer)
                 Bukkit.getLogger().warning(
                   "If an error occurs, please do not report Sms_Gamer or a placeholder's author. " +
-                  "The player parameter was a ConsolePlayer.");
+                    "The player parameter was a ConsolePlayer.");
             return PlaceholderAPI.setPlaceholders(player, string);
         } else return string.replace("%player_name%", player.getName());
     }
@@ -196,6 +196,7 @@ public class StringUtils {
      * then it stops. In this case, {@code %1-5%} will get replaced by the string {@code b c d e}.<br>
      * Finally, it replaces {@code %2+%} with every element of the array starting at index 2 with a space as
      * separator. In this case, it will be replaced by {@code b c d e}.
+     *
      * @param string The string with the placeholder.
      * @param args The args.
      * @return The string with placeholders replaced.
@@ -206,6 +207,7 @@ public class StringUtils {
 
     /**
      * Same explanation as above except that the spacing is replaced with the parameter "spacing".
+     *
      * @param string The string with the placeholder.
      * @param spacing The spacing to use.
      * @param args The args.
@@ -243,6 +245,59 @@ public class StringUtils {
             }
             if (append) sb.append(string, current, at + 1);
             at++;
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns an escaped string (a json friendly string). thx google
+     *
+     * @param s The string that will be escaped.
+     * @return An escaped string (a json friendly string).
+     */
+    public static String escape(String s) {
+        assert s != null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            switch (ch) {
+                case '"':
+                    sb.append("\\\"");
+                    break;
+                case '\\':
+                    sb.append("\\\\");
+                    break;
+                case '\b':
+                    sb.append("\\b");
+                    break;
+                case '\f':
+                    sb.append("\\f");
+                    break;
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
+                case '/':
+                    sb.append("\\/");
+                    break;
+                default:
+                    //Reference: http://www.unicode.org/versions/Unicode5.1.0/
+                    if (ch <= '\u001F' || ch >= '\u007F' && ch <= '\u009F' || ch >= '\u2000' && ch <= '\u20FF') {
+                        String ss = Integer.toHexString(ch);
+                        sb.append("\\u");
+                        for (int k = 0; k < 4 - ss.length(); k++) {
+                            sb.append('0');
+                        }
+                        sb.append(ss.toUpperCase());
+                    } else {
+                        sb.append(ch);
+                    }
+            }
         }
         return sb.toString();
     }
