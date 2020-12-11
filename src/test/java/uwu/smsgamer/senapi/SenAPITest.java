@@ -1,7 +1,11 @@
 package uwu.smsgamer.senapi;
 
 import org.junit.jupiter.api.Test;
+import uwu.smsgamer.senapi.utils.Evaluator;
 import uwu.smsgamer.senapi.utils.sql.*;
+
+import javax.script.*;
+import java.util.List;
 
 public class SenAPITest {
     @Test
@@ -50,5 +54,23 @@ public class SenAPITest {
         System.out.println(table.getList("owoteger", "string", " LIKE ", "'%II%'"));
         System.out.println(table.getAll("owoteger"));
         db.disconnect();
+    }
+
+    @Test
+    public void evalTest() throws Exception {
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        List<ScriptEngineFactory> factories = mgr.getEngineFactories();
+        for (ScriptEngineFactory factory : factories) {
+            System.out.println(factory.getEngineName());
+            System.out.println(factory.getEngineVersion());
+            System.out.println(factory.getLanguageName());
+            System.out.println(factory.getLanguageVersion());
+            System.out.println(factory.getExtensions());
+            System.out.println(factory.getMimeTypes());
+            System.out.println(factory.getNames());
+        }
+        System.out.println(Evaluator.evaluate("12 < 13 < 14"));
+
+        System.out.println(Evaluator.evaluateWithParam("12 < x < 14", "x = 13"));
     }
 }
