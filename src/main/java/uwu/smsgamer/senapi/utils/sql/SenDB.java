@@ -107,11 +107,13 @@ public interface SenDB {
 
     /**
      * A table interface that all tables should implement.
+     * Please, someone, tell me how tf types work bc OMG IT'S SHITTY IN JAVA
      */
     interface Table {
         /**
          * Gets the name of the table.
-         * @return
+         *
+         * @return The name of the table.
          */
         String getName();
 
@@ -127,20 +129,33 @@ public interface SenDB {
 
         /**
          * Counts the number of rows in the table.
+         *
          * @return The number of rows in the table.
          */
         int countRows();
 
         /**
          * Checks if a value in a column exists.
+         *
          * @param column The name of the column.
          * @param checkValue The value to check for.
          * @return If a value in a column exists.
          */
-        boolean exists(String column, String checkValue);
+        default boolean exists(String column, String checkValue) {
+            return exists(column + "=" + checkValue);
+        }
+
+        /**
+         * Checks if a row with said params exists.
+         *
+         * @param params Parameters
+         * @return If a value in a column exists.
+         */
+        boolean exists(String... params);
 
         /**
          * Adds a row to the table.
+         *
          * @param columns The columns of the table.
          * @param values The values of the row to add.
          */
@@ -148,31 +163,35 @@ public interface SenDB {
 
         /**
          * Removes a row from the table.
+         *
          * @param column The column to check for.
          * @param operand The operand to use when checking.
          * @param checkData The data to check for.
          */
         default void removeFromTable(String column, String operand, String checkData) {
-            removeFromTable(new String[]{column + operand + checkData});
+            removeFromTable(column + operand + checkData);
         }
 
         /**
          * Removes a row from the table.
+         *
          * @param where The "where" arguments.
          */
-        void removeFromTable(String[] where);
+        void removeFromTable(String... where);
 
         /**
          * TODO: Doc this lol. I still don't understand what this does but I feel it's important.
-         * @param selected
-         * @param object
-         * @param column
-         * @param checkData
+         *
+         * @param selected a
+         * @param object a
+         * @param column a
+         * @param checkData a
          */
         void upsert(String selected, Object object, String column, String checkData);
 
         /**
          * Sets a value in the table.
+         *
          * @param selected The select column to set.
          * @param object The object to set it to.
          * @param column The column to check for.
@@ -180,19 +199,21 @@ public interface SenDB {
          * @param checkData The data to check for.
          */
         default void set(String selected, Object object, String column, String operand, String checkData) {
-            set(selected, object, new String[]{column + operand + checkData});
+            set(selected, object, column + operand + checkData);
         }
 
         /**
          * Sets a value in the table.
+         *
          * @param selected The select column to set.
          * @param object The object to set it to.
          * @param where The condition to set it to.
          */
-        void set(String selected, Object object, String[] where);
+        void set(String selected, Object object, String... where);
 
         /**
          * Gets a value from the table.
+         *
          * @param selected The selected column.
          * @param column The column to check for.
          * @param operand The operand to use when checking.
@@ -200,56 +221,62 @@ public interface SenDB {
          * @return A value from the table.
          */
         default Object get(String selected, String column, String operand, String checkData) {
-            return get(selected, new String[]{column + operand + checkData});
+            return get(selected, column + operand + checkData);
         }
 
         /**
          * Gets a value from the table.
+         *
          * @param selected The selected column.
          * @param where The conditions to get the value.
          * @return A value from the table.
          */
-        Object get(String selected, String[] where);
+        Object get(String selected, String... where);
 
         /**
          * Gets all the values from the table that satisfies a condition.
+         *
          * @param selected The selected column.
          * @param column The column to check for.
-         * @param operand  The operand to use when checking.
+         * @param operand The operand to use when checking.
          * @param checkData The data to check for.
          * @return All the values from the table that satisfies a condition.
          */
-        default List<Object> getList(String selected, String column, String operand, String checkData) {
-            return getList(selected, new String[]{column + operand + checkData});
+        default List<?> getList(String selected, String column, String operand, String checkData) {
+            return getList(selected, column + operand + checkData);
         }
 
         /**
          * Gets all the values from the table that satisfies a condition.
+         *
          * @param selected The selected column.
          * @param where The conditions to check for.
          * @return All the values from the table that satisfies a condition.
          */
-        List<Object> getList(String selected, String[] where);
+        List<?> getList(String selected, String... where);
 
         /**
          * Gets all the values from a row in the table.
+         *
          * @param selected The selected column.
          * @return All the values from a row in the table.
          */
-        List<Object> getAll(String selected);
+        List<?> getAll(String selected);
 
         /**
          * Gets all the values from all the rows in the table.
+         *
          * @return All the values from all the rows in the table.
          */
-        Map<String, List<Object>> getAll();
+        <T> Map<String, List<T>> getAll();
 
         /**
          * For internal use. Returns the array joined by {@code " AND "}.
+         *
          * @param where The array to use.
          * @return The array joined by {@code " AND "}.
          */
-        static String getCondition(String[] where) {
+        static String getCondition(String... where) {
             return String.join(" AND ", where);
         }
     }

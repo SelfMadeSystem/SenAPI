@@ -121,9 +121,11 @@ public class SQLiteDB implements SenDB {
         }
 
         @Override
-        public boolean exists(String column, String checkValue) {
+        public boolean exists(String... params) {
+            if (params.length == 0) return false;
+            String condition = Table.getCondition(params);
             try {
-                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + column + "=" + checkValue + ";");
+                ResultSet rs = db.query("SELECT * FROM " + getName() + " WHERE " + condition + ";");
                 return rs.next();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -195,7 +197,7 @@ public class SQLiteDB implements SenDB {
         }
 
         @Override
-        public List<Object> getList(String selected, String[] where) {
+        public List<?> getList(String selected, String[] where) {
             if (where.length == 0) return null;
             String condition = Table.getCondition(where);
             try {
@@ -210,7 +212,7 @@ public class SQLiteDB implements SenDB {
         }
 
         @Override
-        public List<Object> getAll(String selected) {
+        public List<?> getAll(String selected) {
             try {
                 ResultSet rs = db.query("SELECT * FROM " + getName() + ";");
                 List<Object> list = new ArrayList<>();
@@ -222,18 +224,19 @@ public class SQLiteDB implements SenDB {
             return null;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public Map<String, List<Object>> getAll() {
+        public <T> Map<String, List<T>> getAll() {
             try {
                 ResultSet rs = db.query("SELECT * FROM " + getName() + ";");
                 ResultSetMetaData meta = rs.getMetaData();
                 int cCount = meta.getColumnCount();
-                Map<String, List<Object>> map = new LinkedHashMap<>();
+                Map<String, List<T>> map = new LinkedHashMap<>();
                 while (rs.next()) {
                     for (int i = 1; i <= cCount; i++) {
                         String name = meta.getColumnName(i);
-                        if (map.containsKey(name)) map.get(name).add(rs.getObject(i));
-                        else map.put(name, new ArrayList<>(Collections.singleton(rs.getObject(i))));
+                        if (map.containsKey(name)) map.get(name).add((T) rs.getObject(i));
+                        else map.put(name, new ArrayList<>(Collections.singleton((T) rs.getObject(i))));
                     }
                 }
                 return map;
