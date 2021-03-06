@@ -69,8 +69,10 @@ public class SenAPITest {
             System.out.println(factory.getMimeTypes());
             System.out.println(factory.getNames());
         }
-        System.out.println(Evaluator.evaluate("12 < 13 < 14"));
+        System.out.println(new Evaluator().eval("12 < 13 < 14"));
 
-        System.out.println(Evaluator.evaluateWithParam("12 < x < 14", "x = 13"));
+        Evaluator evaluator = new Evaluator();
+        evaluator.set("x", 13);
+        System.out.println(evaluator.eval("12 < x < 14"));
     }
 }
