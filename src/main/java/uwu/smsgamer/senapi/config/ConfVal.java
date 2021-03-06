@@ -28,11 +28,10 @@ public class ConfVal<T> {
         ConfigManager.getInstance().setConfVal(this, defaultVal);
     }
 
-    /*public void setValue(T val) {
+    public void setValue(T val) {
         value = val;
-        ConfigManager.getConfig(config).set(name, value);
-        ConfigManager.needToSave = true;
-    }*/
+        ConfigManager.getInstance().getConfig(config).set(name, value);
+    }
 
     public T getValue() {
         if (value == null) return dVal;
