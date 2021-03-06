@@ -10,7 +10,14 @@ import java.util.logging.Level;
 import java.util.stream.Stream;
 
 public class FileUtils {
-    // thx https://howtodoinjava.com/java/io/java-read-file-to-string-examples/
+    /**
+     * thx https://howtodoinjava.com/java/io/java-read-file-to-string-examples/
+     * <p>
+     * Returns a file read line by line as a {@link String}.
+     *
+     * @param file The location of the file.
+     * @return a file read line by line as a {@link String}.
+     */
     public static String readLineByLine(File file) {
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -23,6 +30,22 @@ public class FileUtils {
         return contentBuilder.toString();
     }
 
+    /**
+     * Just copied from Bukkit.
+     * <p>
+     * Saves the raw contents of any resource embedded with a plugin's .jar
+     * file assuming it can be found using {@link #getResource(String)}.
+     * <p>
+     * The resource is saved into the plugin's data folder using the same
+     * hierarchy as the .jar file (subdirectories are preserved).
+     *
+     * @param resourcePath the embedded resource path to look for within the
+     * plugin's .jar file. (No preceding slash).
+     * @param replace if true, the embedded resource will overwrite the
+     * contents of an existing file.
+     * @throws IllegalArgumentException if the resource path is null, empty,
+     *                                  or points to a nonexistent resource.
+     */
     public static void saveResource(String resourcePath, File outFile, boolean replace) {
         if (resourcePath == null || resourcePath.equals("")) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
@@ -56,6 +79,14 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Just copied from Bukkit.
+     * <p>
+     * Gets an embedded resource in this plugin
+     *
+     * @param filename Filename of the resource
+     * @return File if found, otherwise null
+     */
     public static InputStream getResource(String filename) {
         if (filename == null) {
             throw new IllegalArgumentException("Filename cannot be null");

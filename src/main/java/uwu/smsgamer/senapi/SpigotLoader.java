@@ -6,6 +6,9 @@ import java.io.File;
 import java.lang.reflect.*;
 import java.util.logging.Logger;
 
+/**
+ * {@link Loader} implementation for Spigot.
+ */
 public class SpigotLoader extends Loader {
     private static Method getFileMethod;
 

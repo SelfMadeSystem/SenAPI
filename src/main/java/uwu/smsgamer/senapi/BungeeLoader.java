@@ -5,6 +5,9 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.io.File;
 import java.util.logging.Logger;
 
+/**
+ * {@link Loader} implementation for BungeeCord.
+ */
 public class BungeeLoader extends Loader {
     public Plugin plugin;
 
