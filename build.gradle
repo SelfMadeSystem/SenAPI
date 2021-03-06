@@ -22,6 +22,8 @@ repositories {
     maven {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
+
+    maven { url 'https://jitpack.io' }
 }
 
 test {
@@ -31,8 +33,13 @@ test {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+
     compileOnly 'me.clip:placeholderapi:2.10.9'
+
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
+
+    implementation 'com.github.simplix-softworks:simplixstorage:3.2.2'
 
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
     runtime "mysql:mysql-connector-java:8.0.15"

@@ -1,9 +1,5 @@
 package uwu.smsgamer.senapi.utils;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.*;
-import uwu.smsgamer.senapi.ConsolePlayer;
-
 import java.util.*;
 
 /**
@@ -95,31 +91,20 @@ public class StringUtils {
     }
 
     /**
-     * If PlaceholderAPI is enabled, it uses PlaceholderAPI for placeholder replacement.
-     * If not, it simply replaces {@code %player_name%} with the player's name.
-     *
-     * @param player The player for replacements.
-     * @param string The string with the placeholders.
-     * @return A string with placeholders replaced.
-     */
-    public static String replacePlaceholders(final OfflinePlayer player, final String string) {
-        if (PluginUtils.isPlaceholderAPIEnabled()) {
-            if (player instanceof ConsolePlayer)
-                Bukkit.getLogger().warning(
-                  "If an error occurs, please do not report Sms_Gamer or a placeholder's author. " +
-                    "The player parameter was a ConsolePlayer.");
-            return PlaceholderAPI.setPlaceholders(player, string);
-        } else return string.replace("%player_name%", player.getName());
-    }
-
-    /**
      * Colorizes said string. Basically replaces {@code &} with {@code \u00A7}.
      *
      * @param s Said string to replace.
      * @return a colorized string.
      */
     public static String colorize(final String s) {
-        return ChatColor.translateAlternateColorCodes('&', s);
+        char[] b = s.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+                b[i] = '§';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
     }
 
     /**
@@ -300,5 +285,23 @@ public class StringUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static String[] split(String s, char c) {
+        int amnt = 0;
+        char[] ca = s.toCharArray();
+        for (char c1 : ca) if (c1 == c) amnt++;
+        if (amnt == 0) return new String[]{s};
+        String[] result = new String[amnt + 1];
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (char c1 : ca) {
+            if (c1 == c) {
+                result[i++] = sb.toString();
+                sb.setLength(0);
+            } else sb.append(c1);
+        }
+        result[i] = sb.toString();
+        return result;
     }
 }
