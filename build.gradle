@@ -46,7 +46,7 @@ dependencies {
 
     compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
 
-    compile 'org.python:jython-slim:2.7.2'
+    compile 'org.python:jython-standalone:2.7.2'
 }
 
 jar {
