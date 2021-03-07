@@ -1,6 +1,6 @@
 # SenAPI
-SenAPI is an API that provides some utilities.<br>
-The utilities currently contain String utilities, a few player utilities,
+SenAPI is more of a utility library for Spigot and BungeeCord.<br>
+SenAPI currently contains utilities for strings, a few player utilities, a config manager of sorts,
 and some SQL utilities, just MySQL and SQLite for now.<br>
 
 # Implementation:
