@@ -34,6 +34,39 @@ dependencies {
 	    <version>version-here</version>
 	</dependency>
 ```
+# Adding to dependency manager.
+## Gradle
+
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+
+```groovy
+dependencies {
+    implementation 'com.github.True-cc:SenAPI:version-here'
+}
+```
+## Maven:
+
+```xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+```xml
+	<dependency>
+	    <groupId>com.github.True-cc</groupId>
+	    <artifactId>SenAPI</artifactId>
+	    <version>version-here</version>
+	</dependency>
+```
+
+You can shade the SenAPI into your jar or you can use [Lilliputian](https://github.com/GoDead/Lilliputian)
 
 #### Thanks:<br>
 - Thank you Vagdedes for helping me make the SQL methods!<br>
